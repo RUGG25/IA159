@@ -1,0 +1,57 @@
+<script type="module">
+    // Importar funciones necesarias
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCBCKGwJAF7pcd3v1PDw61psIjK9-PsRhk",
+      authDomain: "eai159.firebaseapp.com",
+      projectId: "eai159",
+      storageBucket: "eai159.appspot.com",
+      messagingSenderId: "974074170138",
+      appId: "1:974074170138:web:138774224610583e493aa3",
+      measurementId: "G-F7C5KZP6RF"
+    };
+  
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+  
+    // Manejo del formulario
+    const form = document.getElementById('citaForm');
+  
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+  
+      const nombre = document.getElementById('nombre').value;
+      const telefono = document.getElementById('telefono').value;
+      const fecha = document.getElementById('fecha').value;
+      const motivo = document.getElementById('motivo').value;
+  
+      try {
+        await addDoc(collection(db, "citas"), {
+          nombre,
+          telefono,
+          fecha,
+          motivo,
+          timestamp: new Date()
+        });
+  
+        // Mostrar modal de agradecimiento
+        const modalGracias = new bootstrap.Modal(document.getElementById('modalGracias'));
+        modalGracias.show();
+  
+        // Cuando se cierre el modal:
+        const modalElement = document.getElementById('modalGracias');
+        modalElement.addEventListener('hidden.bs.modal', () => {
+          form.reset(); // Limpia el formulario
+          window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll suave
+        }, { once: true });
+  
+      } catch (error) {
+        alert('❌ Error al registrar la cita: ' + error.message);
+      }
+    });
+  </script>
+  
