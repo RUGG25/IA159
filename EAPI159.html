@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro de Citas - Consultorio Psicológico</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e6f0ff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .container {
+      margin-top: 50px;
+      max-width: 600px;
+    }
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      background-color: #ffffff;
+    }
+    .btn-primary {
+      background-color: #007BFF;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card p-4">
+    <h2 class="text-center text-primary mb-4">Agendar Cita Psicológica</h2>
+    <form id="citaForm">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre completo</label>
+        <input type="text" class="form-control" id="nombre" required>
+      </div>
+      <div class="mb-3">
+        <label for="telefono" class="form-label">Número de teléfono</label>
+        <input type="tel" class="form-control" id="telefono" required>
+      </div>
+      <div class="mb-3">
+        <label for="fecha" class="form-label">Fecha de la cita</label>
+        <input type="date" class="form-control" id="fecha" required>
+      </div>
+      <div class="mb-3">
+        <label for="motivo" class="form-label">Motivo de la consulta</label>
+        <textarea class="form-control" id="motivo" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Registrar Cita</button>
+      <div id="mensajeExito" class="alert alert-success mt-3" style="display:none;">
+        ✅ Cita registrada exitosamente.
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCBCKGwJAF7pcd3v1PDw61psIjK9-PsRhk",
+    authDomain: "eai159.firebaseapp.com",
+    projectId: "eai159",
+    storageBucket: "eai159.firebasestorage.app",
+    messagingSenderId: "974074170138",
+    appId: "1:974074170138:web:138774224610583e493aa3",
+    measurementId: "G-F7C5KZP6RF"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Registrar cita en Firestore
+  const form = document.getElementById('citaForm');
+  const mensajeExito = document.getElementById('mensajeExito');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById('nombre').value;
+    const telefono = document.getElementById('telefono').value;
+    const fecha = document.getElementById('fecha').value;
+    const motivo = document.getElementById('motivo').value;
+
+    try {
+      await addDoc(collection(db, "citas"), {
+        nombre,
+        telefono,
+        fecha,
+        motivo,
+        timestamp: new Date()
+      });
+      mensajeExito.style.display = 'block';
+      form.reset();
+      setTimeout(() => {
+        mensajeExito.style.display = 'none';
+      }, 4000);
+    } catch (error) {
+      alert('❌ Error al registrar la cita: ' + error.message);
+    }
+  });
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCBCKGwJAF7pcd3v1PDw61psIjK9-PsRhk",
+    authDomain: "eai159.firebaseapp.com",
+    projectId: "eai159",
+    storageBucket: "eai159.firebasestorage.app",
+    messagingSenderId: "974074170138",
+    appId: "1:974074170138:web:138774224610583e493aa3",
+    measurementId: "G-F7C5KZP6RF"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+</body>
+</html>
